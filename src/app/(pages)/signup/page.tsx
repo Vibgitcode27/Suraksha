@@ -1,7 +1,10 @@
+import { SignupFormDemo } from "@/app/components/signupComp"
+import { Flex } from "antd"
+
 export default function SignUp() {
     return(
-        <div>
-            <h1>SignUp</h1>
-        </div>
+        <Flex justify="center" align="center" style={{ backgroundColor : "black" , height : "100vh" , paddingTop : "20px"}}>
+            <SignupFormDemo />
+        </Flex>
     )
 }

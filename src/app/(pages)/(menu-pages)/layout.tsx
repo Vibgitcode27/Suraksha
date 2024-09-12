@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, ReactNode } from "react";
+import React, { useState, ReactNode, useEffect } from "react";
 import { Sidebar, SidebarBody, SidebarLink } from "../../components/ui/sidebar";
 import {
   IconArrowLeft,
@@ -10,6 +10,7 @@ import {
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { Avatar } from "antd";
 
 type LayoutProps = {
   children: ReactNode;
@@ -18,6 +19,10 @@ type LayoutProps = {
 export default function MenuPagesLayout({ children }: LayoutProps) {
   const [open, setOpen] = useState(false);
   
+  useEffect(() => {
+    document.documentElement.classList.add('dark');
+  }, []);
+
   const links = [
     {
       label: "Dashboard",
@@ -70,7 +75,7 @@ export default function MenuPagesLayout({ children }: LayoutProps) {
                 label: "Manu Arora",
                 href: "#",
                 icon: (
-                  <>Image</>
+                    <Avatar/>
                 ),
               }}
             />

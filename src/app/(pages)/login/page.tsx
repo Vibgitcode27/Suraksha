@@ -1,7 +1,10 @@
+import { Flex } from "antd"
+import { LoginFormDemo } from "@/app/components/loginComp"
+
 export default function Login() {
     return(
-        <div>
-            <h1>Login</h1>
-        </div>
+        <Flex justify="center" align="center" style={{ backgroundColor : "black" , height : "100vh" , paddingTop : "20px"}}>
+            <LoginFormDemo />
+        </Flex>
     )
 }
