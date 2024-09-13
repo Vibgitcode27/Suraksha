@@ -26,28 +26,28 @@ export default function MenuPagesLayout({ children }: LayoutProps) {
   const links = [
     {
       label: "Dashboard",
-      href: "#",
+      href: "/dashboard",
       icon: (
         <IconBrandTabler className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
       ),
     },
     {
-      label: "Profile",
-      href: "#",
+      label: "Explore",
+      href: "/explore",
       icon: (
         <IconUserBolt className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
       ),
     },
     {
-      label: "Settings",
-      href: "#",
+      label: "Created",
+      href: "/created",
       icon: (
         <IconSettings className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
       ),
     },
     {
       label: "Logout",
-      href: "#",
+      href: "/signup",
       icon: (
         <IconArrowLeft className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
       ),
@@ -56,7 +56,7 @@ export default function MenuPagesLayout({ children }: LayoutProps) {
 
   return (
     <div className={cn(
-      "flex h-screen w-full overflow-hidden bg-gray-100 dark:bg-neutral-800",
+      "flex flex-col md:flex-row h-screen w-full overflow-hidden bg-gray-100 dark:bg-neutral-800",
       "border border-neutral-200 dark:border-neutral-700"
     )}>
       <Sidebar open={open} setOpen={setOpen}>
@@ -121,7 +121,7 @@ const LogoIcon = () => {
 const Dashboard = ({ children }: { children: ReactNode }) => {
   return (
     <div className="flex-1 overflow-auto">
-      <div className="p-2 md:p-10 rounded-tl-2xl bg-white dark:bg-neutral-900 h-full">
+      <div className="p-2 md:p-10 rounded-tl-2xl bg-white dark:bg-neutral-900 h-auto">
         {children}
       </div>
     </div>

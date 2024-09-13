@@ -1,7 +1,7 @@
 export default function Created() {
     return(
         <div>
-            <h1 style={{ color : "white"}}>Created</h1>
+            <h1 style={{ color : "white" , height : "100vh"}}>Created</h1>
         </div>
     )
 }
