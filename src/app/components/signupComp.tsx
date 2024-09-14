@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect , useState } from "react";
 import { Label } from "../components/ui/label";
 import { Input } from "../components/ui/input";
 import { cn } from "@/lib/utils";
@@ -14,10 +14,33 @@ export function SignupFormDemo() {
     document.documentElement.classList.add('dark');
   }, []);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("Form submitted");
+  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
+     e.preventDefault();
+    try {
+      const response = await fetch("http://ec2-54-252-151-126.ap-southeast-2.compute.amazonaws.com:3000/signIn", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, phone, password }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      console.log(data);
+      router.push("/dashboard");
+    } catch (error) {
+      router.push("/dashboard")
+      console.error("There was a problem with the fetch operation:", error);
+    }
   };
+
+  const [email , setEmail] = useState<String>("");
+  const [phone , setPhone] = useState<String>("");
+  const [password , setPassword] = useState<String>("");
 
   const router = useRouter();
 

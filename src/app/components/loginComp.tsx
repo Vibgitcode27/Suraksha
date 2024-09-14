@@ -1,5 +1,6 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useAppDispatch , useAppSelector } from "@/lib/hooks";
 import { Label } from "../components/ui/label";
 import { Input } from "../components/ui/input";
 import { cn } from "@/lib/utils";
@@ -14,10 +15,33 @@ export function LoginFormDemo() {
     document.documentElement.classList.add('dark');
   }, []);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("Form submitted");
+  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
+     e.preventDefault();
+    try {
+      const response = await fetch("http://ec2-54-252-151-126.ap-southeast-2.compute.amazonaws.com:3000/signIn", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      console.log(data);
+      router.push("/dashboard");
+    } catch (error) {
+      router.push("/dashboard")
+      console.error("There was a problem with the fetch operation:", error);
+    }
   };
+
+  const [email , setEmail] = useState<String>("");
+  const [phone , setPhone] = useState<String>("");
+  const [password , setPassword] = useState<String>("");
 
   const router = useRouter();
 
@@ -34,21 +58,20 @@ export function LoginFormDemo() {
       <form className="my-8" onSubmit={handleSubmit}>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="email">Email Address</Label>
-          <Input id="email" placeholder="support.suraksha@gamil.com" type="email" />
+          <Input id="email" placeholder="support.suraksha@gamil.com" type="email" onChange={(e) => {setEmail(e.target.value)}}/>
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
-          <Label htmlFor="password">Phone Number</Label>
-          <Input id="password" placeholder="+91 1234567891" type="tel" />
+          <Label htmlFor="phone number">Phone Number</Label>
+          <Input id="phonenumber" placeholder="+91 1234567891" type="tel" onChange={(e) => {setPhone(e.target.value)}} />
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="password">Password</Label>
-          <Input id="password" placeholder="••••••••" type="password" />
+          <Input id="password" placeholder="••••••••" type="password" onChange={(e) => {setPassword(e.target.value)}}/>
         </LabelInputContainer>
         <button
           className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
           type="submit"
-          onClick={() => router.push("/dashboard")}
-        >
+          >
           Login &rarr;
           <BottomGradient />
         </button>
