@@ -157,11 +157,54 @@ const Skeleton2 = () => (
 );
 
 function Skeleton3(){
-  const [files, setFiles] = useState<File[]>([]);
+  const [file, setFile] = useState<File>();
 
-  const handleFileUpload = (files: File[]) => {
-    setFiles(files);
-    console.log(files);
+    const handleFileUpload = async (uploadedFiles: File[]) => {
+    if (uploadedFiles.length > 0) {
+      const singleFile = uploadedFiles[0];
+      setFile(singleFile);
+
+      const formData = new FormData();
+      formData.append('photo', singleFile);
+
+      try {
+        const response = await fetch('http://ec2-54-206-124-230.ap-southeast-2.compute.amazonaws.com:3000/upload', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to upload file.');
+        }
+
+        const result = await response.json();
+        console.log('File uploaded successfully', result);
+
+          // Upload to the database
+          
+
+          try {
+          const response = await fetch('http://ec2-54-252-151-126.ap-southeast-2.compute.amazonaws.com:3000/createPost', {
+            method: 'POST',
+            headers: {
+              "Content-Type": "application/json",
+            },
+            // body: JSON.stringify({ email, longitude , latitude , "image" : result.signedUrl }),
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to upload file.');
+          }
+
+          const result2 = await response.json();
+          console.log('File uploaded successfully', result2);
+        } catch (error) {
+          console.error('Error uploading file:', error);
+        }
+      } catch (error) {
+        console.error('Error uploading file:', error);
+      }
+    }
   };
   return (
   <Modal>
