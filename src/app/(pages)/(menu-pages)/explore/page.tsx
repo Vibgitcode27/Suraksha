@@ -9,10 +9,6 @@ export default function Explore() {
             <h1 style={{ color : "white" }}>Explore</h1>
             <Flex gap={30} vertical>
                 <FollowingPointerDemo/>
-                <FollowingPointerDemo/>
-                <FollowingPointerDemo/>
-                <FollowingPointerDemo/>
-                <FollowingPointerDemo/>
             </Flex>
         </div>
     )

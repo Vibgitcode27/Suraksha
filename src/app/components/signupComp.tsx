@@ -47,7 +47,7 @@ export function SignupFormDemo() {
           <Input id="email" placeholder="support.suraksha@gamil.com" type="email" />
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
-          <Label htmlFor="password">Password</Label>
+          <Label htmlFor="password">Phone Number</Label>
           <Input id="password" placeholder="+91 1234567891" type="tel" />
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
