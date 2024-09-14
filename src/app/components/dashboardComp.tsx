@@ -1,12 +1,14 @@
 "use client"
 
 import "../styles/main.css"
-import React from "react";
+import React, { useState } from "react";
 import { BentoGrid, BentoGridItem } from "../components/ui/dashboard";
 import { Flex, Image } from "antd";
 import { motion } from "framer-motion";
 import profile from "../assets/profile.jpg"
 import cover from "../assets/background_image.png"
+import { FileUpload } from "../components/ui/file-upload";
+
 import {
   Modal,
   ModalBody,
@@ -21,10 +23,12 @@ import {
   IconCircleDashedCheck,
   IconTableColumn,
   IconReport,
+  IconFlag3Filled,
 } from "@tabler/icons-react";
+
 export function MainDashboard() {
   return (
-     <BentoGrid className="max-w-4xl mx-auto">
+    <BentoGrid className="max-w-4xl mx-auto">
       <BentoGridItem
         key={0}
         title={items[0].title}
@@ -80,6 +84,7 @@ export function MainDashboard() {
     </BentoGrid>
   );
 }
+
 const Skeleton1 = () => (
   <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100">
     <Image 
@@ -91,7 +96,7 @@ const Skeleton1 = () => (
         objectFit: "cover" 
       }}
     />
-</div>
+  </div>
 );
 
 const Skeleton2 = () => (
@@ -104,61 +109,73 @@ const Skeleton2 = () => (
   </div>
 );
 
-const Skeleton3 = () => (
-      <Modal>
-        <ModalTrigger className="relative group">
+function Skeleton3(){
+  const [files, setFiles] = useState<File[]>([]);
+
+  const handleFileUpload = (files: File[]) => {
+    setFiles(files);
+    console.log(files);
+  };
+  return (
+  <Modal>
+    <ModalTrigger className="relative group">
+      <motion.div
+        className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100 overflow-hidden"
+        whileHover={{
+          background: "linear-gradient(to bottom right,  #FFD700, #007BFF)",
+          scale: 1.05,
+          transition: { duration: 0.3 }
+        }}
+      >
+        <div className="flex items-center justify-center w-full h-full cursor-pointer">
           <motion.div
-            className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100 overflow-hidden"
-            whileHover={{
-              background: "linear-gradient(to bottom right,  #FFD700, #007BFF)",
-              scale: 1.05,
-              transition: { duration: 0.3 }
-            }}
+            className="flex flex-col items-center justify-center"
+            whileHover={{ scale: 1.1, transition: { duration: 0.3 } }}
           >
-            <div className="flex items-center justify-center w-full h-full cursor-pointer">
-              <motion.div
-                className="flex flex-col items-center justify-center"
-                whileHover={{ scale: 1.1, transition: { duration: 0.3 } }}
-              >
-                <motion.h1
-                  className="text-white"
-                  style={{ fontSize: '22px' }}
-                  whileHover={{ scale: 1.1, transition: { duration: 0.3 } }}
-                >
-                  Create Post here
-                </motion.h1>
-                <motion.h1
-                  className="text-white"
-                  style={{ fontSize: '65px', padding: "0px", margin: "0px" }}
-                  whileHover={{ scale: 1.2, transition: { duration: 0.3 } }}
-                >
-                  +
-                </motion.h1>
-              </motion.div>
-            </div>
+            <motion.h1
+              className="text-white"
+              style={{ fontSize: '22px' }}
+              whileHover={{ scale: 1.1, transition: { duration: 0.3 } }}
+            >
+              Create Post here
+            </motion.h1>
+            <motion.h1
+              className="text-white"
+              style={{ fontSize: '65px', padding: "0px", margin: "0px" }}
+              whileHover={{ scale: 1.2, transition: { duration: 0.3 } }}
+            >
+              +
+            </motion.h1>
           </motion.div>
-        </ModalTrigger>
-        <ModalBody>
-          <ModalContent>
-            <h4 className="text-lg md:text-2xl text-neutral-600 dark:text-neutral-100 font-bold text-center mb-8">
-              Book your trip to{" "}
-              <span className="px-1 py-0.5 rounded-md bg-gray-100 dark:bg-neutral-800 dark:border-neutral-700 border border-gray-200">
-                Bali
-              </span>{" "}
-              now! ✈️
-            </h4>
-          </ModalContent>
-          <ModalFooter className="gap-4">
-            <button className="px-2 py-1 bg-gray-200 text-black dark:bg-black dark:border-black dark:text-white border border-gray-300 rounded-md text-sm w-28">
-              Cancel
-            </button>
-            <button className="bg-black text-white dark:bg-white dark:text-black text-sm px-2 py-1 rounded-md border border-black w-28">
-              Book Now
-            </button>
-          </ModalFooter>
-        </ModalBody>
-      </Modal>
-);
+        </div>
+      </motion.div>
+    </ModalTrigger>
+    <ModalBody>
+      <ModalContent>
+        <h4 className="text-lg md:text-2xl text-neutral-600 dark:text-neutral-100 font-bold text-center mb-8">
+          Report
+          <span className="px-1 py-0.5 rounded-md bg-gray-100 dark:bg-neutral-800 dark:border-neutral-700 border border-gray-200">
+            Accident {"  "}
+          </span>
+          {"  "}now!{"  "}<IconFlag3Filled style={{ display : "inline-block"}}/>
+        </h4>
+         <div className="w-full max-w-4xl mx-auto min-h-96 border border-dashed bg-white dark:bg-black border-neutral-200 dark:border-neutral-800 rounded-lg">
+            <FileUpload onChange={handleFileUpload} />
+          </div>
+      </ModalContent>
+      <ModalFooter className="gap-4">
+        <button className="px-2 py-1 bg-gray-200 text-black dark:bg-black dark:border-black dark:text-white border border-gray-300 rounded-md text-sm w-28">
+          Cancel
+        </button>
+        <button className="bg-black text-white dark:bg-white dark:text-black text-sm px-2 py-1 rounded-md border border-black w-28">
+          Post
+        </button>
+      </ModalFooter>
+    </ModalBody>
+  </Modal>
+  );
+}
+
 
 const Skeleton4 = () => (
   <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100">
@@ -175,7 +192,6 @@ const Skeleton5 = () => (
     </Flex>
   </div>
 );
-
 const Skeleton6 = () => (
   <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100 p-2">
     <Flex className="desktop hidden md:flex" gap={20} align="center" justify="center" style={{ width: "100%", height: "100%" }}>
