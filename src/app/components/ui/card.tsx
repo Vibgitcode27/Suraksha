@@ -53,7 +53,7 @@ export const FollowPointer = ({
   title?: string | React.ReactNode;
 }) => {
   const colors = [
-    "var(--black)",
+    "var(--white)",
   ];
 
   return (
@@ -77,7 +77,7 @@ export const FollowPointer = ({
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
-        <circle cx="4" cy="4" r="4" fill="currentColor" />
+        <circle cx="4" cy="4" r="4" fill="white" />
       </svg>
       <motion.div
         className="absolute left-4 top-4 px-2 py-1 bg-neutral-800 text-white text-xs whitespace-nowrap rounded-full"
