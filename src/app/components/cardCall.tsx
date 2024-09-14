@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import * as ant from 'antd';
 import { Flex , Timeline } from 'antd';
@@ -14,6 +14,33 @@ export function FollowingPointerDemo() {
     const [longitude, setLongitude] = useState(-122.4194);
     const [completed , setAction] = useState<boolean>(false);
     const [status , setStatus] = useState<boolean>(false);
+
+
+    const fetchAllPosts = async() => {
+        try {
+            const response = await fetch("http://ec2-54-252-151-126.ap-southeast-2.compute.amazonaws.com:3000/totalCompletedPosts", {
+              method: "GET",
+              headers: {
+              "Content-Type": "application/json",
+              },
+            });
+
+          if (!response.ok) {
+              throw new Error("Login failed. Please check your credentials.");
+          }
+
+          const data = await response.json();
+          setResolvedPosts(parseInt(data.totalCompletedPosts));
+          console.log(data.totalCompletedPosts);
+        } catch (error) {
+          console.error("There was a problem with the fetch operation:");
+        }
+    }
+
+
+    useEffect(() => {
+        fetchAllPosts();
+    },[]);
 
     const openGoogleMaps = () => {
         const googleMapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;

@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import profile from "../assets/profile.jpg"
 import cover from "../assets/background_image.png"
 import { FileUpload } from "../components/ui/file-upload";
-
+import { useEffect } from "react";
 import {
   Modal,
   ModalBody,
@@ -24,67 +24,115 @@ import {
   IconReport,
   IconFlag3Filled,
 } from "@tabler/icons-react";
+import { useAppSelector } from "@/lib/hooks";
+
 
 export function MainDashboard() {
-  return (
-    <BentoGrid className="max-w-4xl mx-auto">
-      <BentoGridItem
-        key={0}
-        title={items[0].title}
-        description={items[0].description}
-        header={items[0].header}
-        icon={items[0].icon}
-        className="md:col-span-1"
-      />
-      <BentoGridItem
-        key={1}
-        title={items[1].title}
-        description={items[1].description}
-        header={items[1].header}
-        icon={items[1].icon}
-        className="md:col-span-2"
-      />
-      <BentoGridItem
-        key={2}
-        title={items[2].title}
-        description={items[2].description}
-        header={items[2].header}
-        icon={items[2].icon}
-      />
-      <BentoGridItem
-        key={3}
-        title={items[3].title}
-        description={items[3].description}
-        header={items[3].header}
-        icon={items[3].icon}
-      />
-      <BentoGridItem
-        key={4}
-        title={items[4].title}
-        description={items[4].description}
-        header={items[4].header}
-        icon={items[4].icon}
-      />
-      <BentoGridItem
-        key={5}
-        title={items[5].title}
-        description={items[5].description}
-        header={items[5].header}
-        icon={items[5].icon}
-        className="md:col-span-2"
-      />
-      <BentoGridItem
-        key={6}
-        title={items[6].title}
-        description={items[6].description}
-        header={items[6].header}
-        icon={items[6].icon}
-      />
-    </BentoGrid>
-  );
-}
 
-const Skeleton1 = () => (
+    const email = useAppSelector(state => state.user.email);
+    const [totalUserPosts, setTotalUserPosts] = useState<number>();
+    const [resolvedUserPosts, setResolvedUserPosts] = useState<number>();
+    const [totalPosts, setTotalPosts] = useState<number>();
+    const [resolvedPosts, setResolvedPosts] = useState<number>();
+
+
+    const fetchTotalUserPosts = async() => {
+        try {
+            const response = await fetch("http://ec2-54-252-151-126.ap-southeast-2.compute.amazonaws.com:3000/userTotalPosts", {
+              method: "POST",
+              headers: {
+              "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ email }),
+            });
+
+          if (!response.ok) {
+              throw new Error("Login failed. Please check your credentials.");
+          }
+
+          const data = await response.json();
+          setTotalUserPosts(parseInt(data.totalPosts));
+          console.log(data.totalPosts);
+        } catch (error) {
+          console.error("There was a problem with the fetch operation:");
+        }
+    }
+
+    const fetchResolvedUserPosts = async() => {
+        try {
+            const response = await fetch("http://ec2-54-252-151-126.ap-southeast-2.compute.amazonaws.com:3000/userCompletedPosts", {
+              method: "POST",
+              headers: {
+              "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ email }),
+            });
+
+          if (!response.ok) {
+              throw new Error("Login failed. Please check your credentials.");
+          }
+
+          const data = await response.json();
+          setResolvedUserPosts(parseInt(data.userCompletedPosts));
+          console.log("resolved post : " + data.userCompletedPosts);
+        } catch (error) {
+          console.error("There was a problem with the fetch operation:");
+        }
+    }
+
+    const fetchApplicationTotalUserPosts = async() => {
+        try {
+            const response = await fetch("http://ec2-54-252-151-126.ap-southeast-2.compute.amazonaws.com:3000/totalPosts", {
+              method: "GET",
+              headers: {
+              "Content-Type": "application/json",
+              },
+            });
+
+          if (!response.ok) {
+              throw new Error("Login failed. Please check your credentials.");
+          }
+
+          const data = await response.json();
+          setTotalPosts(parseInt(data.totalPosts));
+          console.log(data.totalPosts);
+        } catch (error) {
+          console.error("There was a problem with the fetch operation:");
+        }
+    }
+
+    const fetchApplicationTotalCompletedUserPosts = async() => {
+        try {
+            const response = await fetch("http://ec2-54-252-151-126.ap-southeast-2.compute.amazonaws.com:3000/totalCompletedPosts", {
+              method: "GET",
+              headers: {
+              "Content-Type": "application/json",
+              },
+            });
+
+          if (!response.ok) {
+              throw new Error("Login failed. Please check your credentials.");
+          }
+
+          const data = await response.json();
+          setResolvedPosts(parseInt(data.totalCompletedPosts));
+          console.log(data.totalCompletedPosts);
+        } catch (error) {
+          console.error("There was a problem with the fetch operation:");
+        }
+    }
+    
+    useEffect(() => {
+        fetchTotalUserPosts();
+        fetchResolvedUserPosts();
+        fetchApplicationTotalUserPosts();
+        fetchApplicationTotalCompletedUserPosts();
+    } , []);
+  
+  const name = useAppSelector(state => state.user.name);
+
+
+  const Skeleton1 = () => (
   <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100">
     <Image 
       src={profile.src} 
@@ -176,7 +224,7 @@ function Skeleton3(){
 const Skeleton4 = () => (
   <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100">
     <Flex align="center" justify="center" style={{width : "100%"}}>
-      <h1 className="text-animate" style={{ fontSize : "120px" , color : "red"}}>37</h1>
+      <h1 className="text-animate" style={{ fontSize : "120px" , color : "red"}}>{totalUserPosts ? totalUserPosts : 0}</h1>
     </Flex>
   </div>
 );
@@ -184,7 +232,7 @@ const Skeleton4 = () => (
 const Skeleton5 = () => (
   <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100">
     <Flex align="center" justify="center" style={{width : "100%"}}>
-      <h1 className="text-animate2" style={{ fontSize : "120px" , color : "red"}}>21</h1>
+      <h1 className="text-animate2" style={{ fontSize : "120px" , color : "red"}}>{resolvedUserPosts ? resolvedUserPosts : 0}</h1>
     </Flex>
   </div>
 );
@@ -201,7 +249,7 @@ const Skeleton6 = () => (
           borderRadius: "20px" 
         }}
       >
-        <h1 style={{ fontSize: "80px", color: "white", fontWeight: "500" }}>1021</h1>
+        <h1 style={{ fontSize: "80px", color: "white", fontWeight: "500" }}>{totalPosts ? totalPosts : 0}</h1>
       </Flex>
       <Flex 
         align="center" 
@@ -213,7 +261,7 @@ const Skeleton6 = () => (
           borderRadius: "20px" 
         }}
       >
-        <h1 style={{ fontSize: "80px", color: "white", fontWeight: "500" }}>13</h1>
+        <h1 style={{ fontSize: "80px", color: "white", fontWeight: "500" }}>{resolvedPosts ? resolvedPosts : 0}</h1>
       </Flex>
     </Flex>
 
@@ -228,7 +276,7 @@ const Skeleton6 = () => (
           borderRadius: "20px" 
         }}
       >
-        <h1 style={{ fontSize: "40px", color: "white", fontWeight: "500" }}>1021</h1>
+        <h1 style={{ fontSize: "40px", color: "white", fontWeight: "500" }}>{totalPosts ? totalPosts : 0}</h1>
       </Flex>
       <Flex 
         align="center" 
@@ -240,16 +288,16 @@ const Skeleton6 = () => (
           borderRadius: "20px" 
         }}
       >
-        <h1 style={{ fontSize: "40px", color: "white", fontWeight: "500" }}>13</h1>
+        <h1 style={{ fontSize: "40px", color: "white", fontWeight: "500" }}>{resolvedPosts ? resolvedPosts : 0}</h1>
       </Flex>
     </Flex>
   </div>
 );
 
-const items = [
+  const items = [
   {
     title: "Name",
-    description: <div style={{ fontSize : "27px"  }}>Vibhor Phalke</div>,
+    description: <div style={{ fontSize : "27px"  }}>{name ? name : "Jimmy Joe"}</div>,
     header: <Skeleton1 />,
     icon: <IconClipboardCopy className="h-4 w-4 text-white" />,
   },
@@ -284,3 +332,62 @@ const items = [
     icon: <IconBoxAlignRightFilled className="h-4 w-4 text-neutral-500" />,
   }
 ];
+
+
+  return (
+    <BentoGrid className="max-w-4xl mx-auto">
+      <BentoGridItem
+        key={0}
+        title={items[0].title}
+        description={items[0].description}
+        header={items[0].header}
+        icon={items[0].icon}
+        className="md:col-span-1"
+      />
+      <BentoGridItem
+        key={1}
+        title={items[1].title}
+        description={items[1].description}
+        header={items[1].header}
+        icon={items[1].icon}
+        className="md:col-span-2"
+      />
+      <BentoGridItem
+        key={2}
+        title={items[2].title}
+        description={items[2].description}
+        header={items[2].header}
+        icon={items[2].icon}
+      />
+      <BentoGridItem
+        key={3}
+        title={items[3].title}
+        description={items[3].description}
+        header={items[3].header}
+        icon={items[3].icon}
+      />
+      <BentoGridItem
+        key={4}
+        title={items[4].title}
+        description={items[4].description}
+        header={items[4].header}
+        icon={items[4].icon}
+      />
+      <BentoGridItem
+        key={5}
+        title={items[5].title}
+        description={items[5].description}
+        header={items[5].header}
+        icon={items[5].icon}
+        className="md:col-span-2"
+      />
+      <BentoGridItem
+        key={6}
+        title={items[6].title}
+        description={items[6].description}
+        header={items[6].header}
+        icon={items[6].icon}
+      />
+    </BentoGrid>
+  );
+}
