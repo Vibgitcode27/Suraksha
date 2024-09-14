@@ -1,16 +1,18 @@
 "use client";
 import React, { useState, ReactNode, useEffect } from "react";
 import { Sidebar, SidebarBody, SidebarLink } from "../../components/ui/sidebar";
+import avatar from "../../assets/profile.jpg"
 import {
   IconArrowLeft,
   IconBrandTabler,
-  IconSettings,
-  IconUserBolt,
+  IconPencilPlus,
+  IconInputSearch,
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import logo from "../../assets/logo1.png"
 import { cn } from "@/lib/utils";
-import { Avatar } from "antd";
+import { Avatar , Image } from "antd";
 
 type LayoutProps = {
   children: ReactNode;
@@ -35,14 +37,14 @@ export default function MenuPagesLayout({ children }: LayoutProps) {
       label: "Explore",
       href: "/explore",
       icon: (
-        <IconUserBolt className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+        <IconInputSearch className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
       ),
     },
     {
       label: "Created",
       href: "/created",
       icon: (
-        <IconSettings className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+        <IconPencilPlus className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
       ),
     },
     {
@@ -72,10 +74,10 @@ export default function MenuPagesLayout({ children }: LayoutProps) {
           <div>
             <SidebarLink
               link={{
-                label: "Manu Arora",
+                label: "Vibhor Phalke",
                 href: "#",
                 icon: (
-                    <Avatar/>
+                    <Avatar src={avatar.src}/>
                 ),
               }}
             />
@@ -95,13 +97,13 @@ const Logo = () => {
       href="#"
       className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20"
     >
-      <div className="h-5 w-6 bg-black dark:bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm flex-shrink-0" />
+      <Image src={logo.src} preview={false} style={{ height : "50px" , width : "70px" , marginTop : "10px"}}/>
       <motion.span
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         className="font-medium text-black dark:text-white whitespace-pre"
       >
-        Acet Labs
+        Suraksha
       </motion.span>
     </Link>
   );
@@ -113,7 +115,7 @@ const LogoIcon = () => {
       href="#"
       className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20"
     >
-      <div className="h-5 w-6 bg-black dark:bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm flex-shrink-0" />
+      <Image src={logo.src} preview={false} style={{ height : "40px" , width : "60px" , marginTop : "10px"}}/>
     </Link>
   );
 };
