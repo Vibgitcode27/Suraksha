@@ -266,7 +266,7 @@ function Skeleton3Content() {
             >
               <motion.h1
                 className="text-white"
-                style={{ fontSize: '22px' }}
+                style={{ fontSize: '22px' , paddingTop : "10px" }}
                 whileHover={{ scale: 1.1, transition: { duration: 0.3 } }}
               >
                 Create Post here
