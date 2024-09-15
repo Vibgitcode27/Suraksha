@@ -158,94 +158,94 @@ const Skeleton2 = () => (
 );
 
 function Skeleton3Content() {
-  const [file, setFile] = useState<File | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const email = useAppSelector(state => state.user.email);
-  const [messageApi, contextHolder] = message.useMessage();
-  const { setOpen } = useModal();
+    const [file, setFile] = useState<File | null>(null);
+    const [error, setError] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const email = useAppSelector(state => state.user.email);
+    const [messageApi, contextHolder] = message.useMessage();
+    const { setOpen } = useModal();
 
-  const success = () => {
-    messageApi.open({
-      type: 'success',
-      content: 'Post created successfully!',
-    });
-  };
-
-  const fail = () => {
-    messageApi.open({
-      type: 'error',
-      content: 'Post Upload Failed!',
-    });
-  };
-
-  const handleFileSelect = (uploadedFiles: File[]) => {
-    if (uploadedFiles.length > 0) {
-      setFile(uploadedFiles[0]);
-    }
-  };
-
-  const handlePost = async () => {
-    if (!file) {
-      setError('Please select a file first.');
-      return;
-    }
-
-    setIsLoading(true);
-    setError(null);
-
-    const formData = new FormData();
-    formData.append('photo', file);
-
-    try {
-      const response = await fetch('http://ec2-54-206-124-230.ap-southeast-2.compute.amazonaws.com:3000/upload', {
-        method: 'POST',
-        body: formData,
+    const success = () => {
+      messageApi.open({
+        type: 'success',
+        content: 'Post created successfully!',
       });
+    };
 
-      if (!response.ok) {
-        throw new Error('Failed to upload file.');
+    const fail = () => {
+      messageApi.open({
+        type: 'error',
+        content: 'Post Upload Failed!',
+      });
+    };
+
+    const handleFileSelect = (uploadedFiles: File[]) => {
+      if (uploadedFiles.length > 0) {
+        setFile(uploadedFiles[0]);
+      }
+    };
+
+    const handlePost = async () => {
+      if (!file) {
+        setError('Please select a file first.');
+        return;
       }
 
-      const result = await response.json();
-      console.log('File uploaded successfully', JSON.stringify(result.signedUrl));
+      setIsLoading(true);
+      setError(null);
 
-      if (!navigator.geolocation) {
-        throw new Error('Geolocation is not supported by your browser');
+      const formData = new FormData();
+      formData.append('photo', file);
+
+      try {
+        const response = await fetch('http://ec2-54-206-124-230.ap-southeast-2.compute.amazonaws.com:3000/upload', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to upload file.');
+        }
+
+        const result = await response.json();
+        console.log('File uploaded successfully', JSON.stringify(result.signedUrl));
+
+        if (!navigator.geolocation) {
+          throw new Error('Geolocation is not supported by your browser');
+        }
+
+        const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject);
+        });
+
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        console.log(lon + " ____  " + lat);
+
+        const createPostResponse = await fetch('http://ec2-54-252-151-126.ap-southeast-2.compute.amazonaws.com:3000/createPost', {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, longitude: JSON.stringify(lon), latitude: JSON.stringify(lat), "image": result.signedUrl }),
+        });
+
+        if (!createPostResponse.ok) {
+          throw new Error('Failed to create post.');
+        }
+
+        const createPostResult = await createPostResponse.json();
+        console.log('Post created successfully', createPostResult);
+        success();
+      } catch (error) {
+        console.error('Error:', error);
+        setError(error instanceof Error ? error.message : 'An unknown error occurred');
+        fail();
+      } finally {
+        setIsLoading(false);
+        setOpen(false);
       }
-
-      const position = await new Promise<GeolocationPosition>((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject);
-      });
-
-      const lat = position.coords.latitude;
-      const lon = position.coords.longitude;
-      console.log(lon + " ____  " + lat);
-
-      const createPostResponse = await fetch('http://ec2-54-252-151-126.ap-southeast-2.compute.amazonaws.com:3000/createPost', {
-        method: 'POST',
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, longitude: JSON.stringify(lon), latitude: JSON.stringify(lat), "image": result.signedUrl }),
-      });
-
-      if (!createPostResponse.ok) {
-        throw new Error('Failed to create post.');
-      }
-
-      const createPostResult = await createPostResponse.json();
-      console.log('Post created successfully', createPostResult);
-      success();
-    } catch (error) {
-      console.error('Error:', error);
-      setError(error instanceof Error ? error.message : 'An unknown error occurred');
-      fail();
-    } finally {
-      setIsLoading(false);
-      setOpen(false);
-    }
-  };
+    };
 
   return (
     <Modal>
