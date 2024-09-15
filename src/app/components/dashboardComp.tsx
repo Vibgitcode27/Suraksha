@@ -210,17 +210,17 @@ function Skeleton3Content() {
         const result = await response.json();
         console.log('File uploaded successfully', JSON.stringify(result.signedUrl));
 
-        if (!navigator.geolocation) {
-          throw new Error('Geolocation is not supported by your browser');
-        }
+        // if (!navigator.geolocation) {
+        //   throw new Error('Geolocation is not supported by your browser');
+        // }
 
-        const position = await new Promise<GeolocationPosition>((resolve, reject) => {
-          navigator.geolocation.getCurrentPosition(resolve, reject);
-        });
+        // const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+        //   navigator.geolocation.getCurrentPosition(resolve, reject);
+        // });
 
-        const lat = position.coords.latitude;
-        const lon = position.coords.longitude;
-        console.log(lon + " ____  " + lat);
+        // const lat = position.coords.latitude;
+        // const lon = position.coords.longitude;
+        // console.log(lon + " ____  " + lat);
 
         const createPostResponse = await fetch('http://ec2-54-252-151-126.ap-southeast-2.compute.amazonaws.com:3000/createPost', {
           method: 'POST',
