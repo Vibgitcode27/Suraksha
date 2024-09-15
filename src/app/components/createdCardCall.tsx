@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import logo from "../assets/logo2.png";
 import Image from 'next/image';
 import * as ant from 'antd';
-import { Flex, Timeline, Spin } from 'antd';
+import { Flex, Timeline, Spin , message } from 'antd';
 import { motion } from "framer-motion";
 import { FollowerPointerCard } from "../components/ui/card";
 import { IconMapPinFilled } from '@tabler/icons-react';
@@ -28,6 +28,14 @@ export function CreatedPosts() {
   const [statusCardId, setStatusCardId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true); // Add loading state
   const email = useAppSelector((state) => state.user.email);
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const success = () => {
+    messageApi.open({
+      type: 'success',
+      content: 'Post deleted successfull kindly refresh',
+    });
+  };
 
   const fetchAllPosts = async () => {
     try {
@@ -49,9 +57,31 @@ export function CreatedPosts() {
     } catch (error) {
       console.error("There was a problem with the fetch operation:", error);
     } finally {
-      setLoading(false); // Set loading to false once data is fetched
+      setLoading(false);
     }
   };
+
+  const handleDelete = async(postId : number) => {
+      try {
+      const response = await fetch("http://ec2-54-252-151-126.ap-southeast-2.compute.amazonaws.com:3000/deletePost", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ postId }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch posts. Please try again.");
+      }
+
+      const data = await response.json();
+      success();
+      console.log("deleted " + data);
+    } catch (error) {
+      console.error("There was a problem with the fetch operation:", error);
+    }
+  }
 
   useEffect(() => {
     fetchAllPosts();
@@ -114,6 +144,12 @@ export function CreatedPosts() {
                         className="w-full sm:w-auto px-4 py-2 text-white font-bold rounded-xl text-xs sm:text-sm hover:opacity-80 transition duration-200"
                       >
                         {item.completed ? "Completed" : "Pending"}
+                      </button>
+                      <button
+                        className="w-full sm:w-auto px-4 py-2 bg-gray-800 text-white font-bold rounded-xl text-xs sm:text-sm hover:bg-gray-700 transition duration-200"
+                        onClick={() => {handleDelete(item.id)}}
+                      >
+                        Delete
                       </button>
                       <button
                         onClick={() => toggleStatusCard(item.id)}
