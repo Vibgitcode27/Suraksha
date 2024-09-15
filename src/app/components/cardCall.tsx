@@ -27,7 +27,7 @@ export function FollowingPointerDemo() {
 
   const fetchAllPosts = async () => {
     try {
-      const response = await fetch("http://ec2-54-252-151-126.ap-southeast-2.compute.amazonaws.com:3000/Posts", {
+      const response = await fetch("http://ec2-54-252-151-126.ap-southeast-2.compute.amazonaws.com:3000/uncensoredPosts", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
