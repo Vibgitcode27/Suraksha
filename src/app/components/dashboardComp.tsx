@@ -227,7 +227,7 @@ function Skeleton3Content() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ email, longitude: JSON.stringify(lon), latitude: JSON.stringify(lat), "image": result.signedUrl }),
+          body: JSON.stringify({ email, longitude: JSON.stringify(70.7970281), latitude: JSON.stringify(22.3675501), "image": result.signedUrl }),
         });
 
         if (!createPostResponse.ok) {
